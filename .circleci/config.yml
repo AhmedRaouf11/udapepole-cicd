@@ -359,7 +359,7 @@ workflows:
   aws-cli:
     jobs:
       - aws-cli-cred-setup:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend,deploy-infrastructure]
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       - build-frontend
       - build-backend
       - test-frontend:
@@ -377,7 +377,7 @@ workflows:
             - scan-frontend
             - scan-backend
       - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend,aws-cli-cred-setup]
           filters:
             branches:
               only: [main]
