@@ -359,7 +359,7 @@ workflows:
   aws-cli:
     jobs:
       - aws-cli-cred-setup:
-          context: aws
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend,deploy-infrastructure]
       - build-frontend
       - build-backend
       - test-frontend:
