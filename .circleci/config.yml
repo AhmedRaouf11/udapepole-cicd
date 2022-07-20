@@ -1,8 +1,7 @@
 version: 2.1
 orbs:
   slack: circleci/slack@4.9.3
-  aws-cli: circleci/aws-cli@1.4.0
-  aws-s3: circleci/aws-s3@1.0.9
+  aws-cli: circleci/aws-cli@2.0.6
 commands:
   # install_awscli:
   #   description: install aws cli v2
@@ -63,6 +62,14 @@ commands:
 #             fi
             
 jobs:
+  jobs:
+  aws-cli-cred-setup:
+    executor: aws-cli/default
+    steps:
+      - aws-cli/setup:
+          aws-access-key-id: AWS_KEY_ID
+          aws-secret-access-key: Secret_access_key
+          aws-region: AWS_DEFAULT_REGION
   build-frontend:
     docker:
       - image: cimg/node:13.8.0
@@ -350,6 +357,10 @@ jobs:
 
 workflows:
   default:
+  aws-cli:
+    jobs:
+      - aws-cli-cred-setup:
+          context: aws
     jobs:
       - build-frontend
       - build-backend
