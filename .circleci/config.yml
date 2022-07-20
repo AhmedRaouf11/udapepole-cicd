@@ -62,12 +62,11 @@ commands:
 #             fi
             
 jobs:
-  jobs:
   aws-cli-cred-setup:
     executor: aws-cli/default
     steps:
       - aws-cli/setup:
-          aws-access-key-id: AWS_KEY_ID
+          aws-access-key-id: Access_key_ID
           aws-secret-access-key: Secret_access_key
           aws-region: AWS_DEFAULT_REGION
   build-frontend:
@@ -361,7 +360,6 @@ workflows:
     jobs:
       - aws-cli-cred-setup:
           context: aws
-    jobs:
       - build-frontend
       - build-backend
       - test-frontend:
