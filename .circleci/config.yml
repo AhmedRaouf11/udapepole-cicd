@@ -174,9 +174,9 @@ jobs:
               --template-file .circleci/files/backend.yml \
               --tags project=udapepole \
               --stack-name "udapepole-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
-              --profile udacity-1 \
-              --region  us-east-1
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+              # --profile udacity-1 \
+              # --region  us-east-1
       - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -184,19 +184,19 @@ jobs:
               --template-file .circleci/files/frontend.yml \
               --tags project=udapepole \
               --stack-name "udapepole-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \  
-              --profile udacity-1 \
-              --region  us-east-1
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+              # --profile udacity-1 \
+              # --region  us-east-1
       - run:
           name: Add back-end ip to ansible inventory
           command: |
             BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
               --filters "Name=tag:name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text \
-              --profile udacity-1 \
-              --region  us-east-1
-              )
+              --output text)
+              # --profile udacity-1 \
+              # --region  us-east-1
+              # )
             echo "$BACKEND_PUBLIC_IP" >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
 
