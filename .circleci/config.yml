@@ -7,8 +7,9 @@ commands:
     description: install aws cli v2
     steps:
       - run:
-          name: install aws cli
+          name: install aws cli v2
           command: |
+            sudo apt-get update && sudo apt-get install -yy less
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
@@ -62,13 +63,13 @@ commands:
 #             fi
             
 jobs:
-  aws-cli-cred-setup:
-    executor: aws-cli/default
-    steps:
-      - aws-cli/setup:
-          aws-access-key-id: Access_key_ID
-          aws-secret-access-key: Secret_access_key
-          aws-region: AWS_DEFAULT_REGION
+  # aws-cli-cred-setup:
+  #   executor: aws-cli/default
+  #   steps:
+  #     - aws-cli/setup:
+  #         aws-access-key-id: Access_key_ID
+  #         aws-secret-access-key: Secret_access_key
+  #         aws-region: AWS_DEFAULT_REGION
   build-frontend:
     docker:
       - image: cimg/node:13.8.0
@@ -179,39 +180,30 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              --tags project=udapepole \
-              --stack-name "udapepole-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-              # --profile udacity-1 \
-              # --region  us-east-1
       - run:
           name: Ensure front-end infrastructure exist
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              --tags project=udapepole \
-              --stack-name "udapepole-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7} \
+              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-              # --profile udacity-1 \
-              # --region  us-east-1
       - run:
           name: Add back-end ip to ansible inventory
           command: |
             BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
-              --filters "Name=tag:name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text
-              # --profile udacity-1 \
-              # --region  us-east-1
-              )
-            echo "$BACKEND_PUBLIC_IP" >> .circleci/ansible/inventory.txt
+              --output text)
+            echo $BACKEND_PUBLIC_IP >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
-
-      - run: yum -y install tar gzip
       - persist_to_workspace:
           root: ~/
           paths:
-            - UDAPEPOLE-CICD/.circleci/ansible/inventory.txt
+            - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure      
 
 #   configure-infrastructure:
