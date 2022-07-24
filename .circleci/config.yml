@@ -14,16 +14,16 @@ commands:
             unzip awscliv2.zip
             sudo ./aws/install
 
-  # install_ansible:
-  #   description: install ansible v2 
-  #   steps:
-  #     - run:
-  #         name: install ansible v2
-  #         commands: |
-  #           sudo apt update
-  #           sudo apt install software-properties-common
-  #           sudo add-apt-repository --yes --update ppa:ansible/ansible
-  #           sudo apt install ansible
+  install_ansible:
+    description: install ansible v2 
+    steps:
+      - run:
+          name: install ansible v2
+          commands: |
+            sudo apt update
+            sudo apt install software-properties-common
+            sudo add-apt-repository --yes --update ppa:ansible/ansible
+            sudo apt install ansible
 
   notify_on_failure:
     steps:
@@ -234,7 +234,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
-      # - install_ansible
+      - install_ansible
       - add_ssh_keys:
           fingerprints: ["3f:66:ca:ec:7c:fa:02:a7:fd:ed:5d:8e:c4:e6:58:99"]
       - attach_workspace:
