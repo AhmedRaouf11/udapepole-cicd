@@ -1,5 +1,5 @@
 ---
--name: "copy env"
+- name: "copy env"
   shell: |
     cd ~
     echo "TYPEORM_CONNECTION={{ lookup('env', 'TYPEORM_CONNECTION') }}" >> .env.test
