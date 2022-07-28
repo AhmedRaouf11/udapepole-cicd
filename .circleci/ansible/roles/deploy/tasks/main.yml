@@ -1,44 +1,68 @@
 ---
-# - name: "copy env"
-#   shell: |
-#     cd ~
-#     echo "TYPEORM_CONNECTION={{ lookup('env', 'TYPEORM_CONNECTION') }}" >> .env.test
-#     echo "TYPEORM_MIGRATIONS_DIR={{lookup('env','TYPEORM_MIGRATIONS_DIR')}}" >> .env.test
-#     echo "TYPEORM_ENTITIES={{ lookup('env', 'TYPEORM_ENTITIES') }}" >> .env.test
-#     echo "TYPEORM_HOST={{ lookup('env', 'TYPEORM_HOST') }}" >> .env.test
-#     echo "TYPEORM_PORT={{ lookup('env', 'TYPEORM_PORT') }}" >> .env.test
-#     echo "TYPEORM_USERNAME={{ lookup('env', 'TYPEORM_USERNAME') }}" >> .env.test
-#     echo "TYPEORM_PASSWORD={{ lookup('env', 'TYPEORM_PASSWORD') }}" >> .env.test
-#     echo "TYPEORM_DATABASE={{ lookup('env', 'TYPEORM_DATABASE') }}" >> .env.test
+# # - name: "copy env"
+# #   shell: |
+# #     cd ~
+# #     echo "TYPEORM_CONNECTION={{ lookup('env', 'TYPEORM_CONNECTION') }}" >> .env.test
+# #     echo "TYPEORM_MIGRATIONS_DIR={{lookup('env','TYPEORM_MIGRATIONS_DIR')}}" >> .env.test
+# #     echo "TYPEORM_ENTITIES={{ lookup('env', 'TYPEORM_ENTITIES') }}" >> .env.test
+# #     echo "TYPEORM_HOST={{ lookup('env', 'TYPEORM_HOST') }}" >> .env.test
+# #     echo "TYPEORM_PORT={{ lookup('env', 'TYPEORM_PORT') }}" >> .env.test
+# #     echo "TYPEORM_USERNAME={{ lookup('env', 'TYPEORM_USERNAME') }}" >> .env.test
+# #     echo "TYPEORM_PASSWORD={{ lookup('env', 'TYPEORM_PASSWORD') }}" >> .env.test
+# #     echo "TYPEORM_DATABASE={{ lookup('env', 'TYPEORM_DATABASE') }}" >> .env.test
 
-- name: "create backend app directory"
+# - name: "create backend app directory"
+#   file:
+#     path: ~/backend-app
+#     state: directory
+
+# - name: "unarchive backend files"
+#   unarchive:
+#     src: artifact.tar.gz
+#     dest: ~/backend-app
+
+# - name: "install node dep"
+#   shell: |
+#     cd ~/backend-app
+#     npm install
+
+# - name: "executing node app with PM2"
+#   become: true
+#   shell: |
+#     cd ~/backend-app/dist
+#     pm2 stop default
+#     pm2 start -f main.js
+#   register: execute_node
+
+# - name: "print message"
+#   debug:
+#     msg: "{{execute_node.stdout_lines}}"
+
+# - name: "configure pm2 start as service"
+#   become: true
+#   shell: |
+#     env PATH=$PATH:/usr/local/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu
+
+- name: Create Backend Directory
   file:
-    path: ~/backend-app
+    path: /home/ubuntu/backend
     state: directory
 
-- name: "unarchive backend files"
+- name: Extract artifact.tar.gz to EC2 
   unarchive:
     src: artifact.tar.gz
-    dest: ~/backend-app
+    dest: /home/ubuntu/backend
 
-- name: "install node dep"
-  shell: |
-    cd ~/backend-app
-    npm i
+- name: "install npm"
+  become: true
+  apt:
+    name: npm
+    state: latest
+    update_cache: yes
 
-- name: "executing node app with PM2"
+- name: Start the app
   become: true
   shell: |
-    cd ~/backend-app/dist
+    cd /home/ubuntu/backend/dist
     pm2 stop default
     pm2 start -f main.js
-  register: execute_node
-
-- name: "print message"
-  debug:
-    msg: "{{execute_node.stdout_lines}}"
-
-- name: "configure pm2 start as service"
-  become: true
-  shell: |
-    env PATH=$PATH:/usr/local/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu
