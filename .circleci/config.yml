@@ -307,8 +307,8 @@ jobs:
       - checkout
       - install_awscli
       - install_nodejs
-      # - restore_cache:
-      #     keys: [backend-build]
+      - restore_cache:
+          keys: [backend-build]
       - run:
           name: Run migrations
           command: |
