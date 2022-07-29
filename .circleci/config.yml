@@ -33,16 +33,16 @@ commands:
           template: basic_fail_1
 
   install_nodejs:
-    description: install nodejs 13
+    description: install nodejs 10
     steps:
       - run:
-          name: install Node.js 13
+          name: install Node.js 10
           command: |
-            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            curl -fsSL https://deb.nodesource.com/setup_10.x | sudo -E bash -
             sudo apt install -y nodejs
 
             sudo npm install --global n
-            sudo n 13.8.0
+            sudo n 10.0.0
   
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
