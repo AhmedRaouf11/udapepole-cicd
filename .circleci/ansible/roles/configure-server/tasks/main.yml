@@ -8,12 +8,12 @@
     sudo npm install --global n
     sudo n 13.8.0
 
-- name: "installing npm"
-  become: true
-  apt:
-    name: npm
-    update_cache: yes
-    state: latest
+# - name: "installing npm"
+#   become: true
+#   apt:
+#     name: npm
+#     update_cache: yes
+#     state: latest
 
 - name: "update packages."
   become: true
