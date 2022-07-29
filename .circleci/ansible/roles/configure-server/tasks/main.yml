@@ -11,9 +11,9 @@
 - name: "installing npm"
   become: true
   apt:
-  name: npm
-  update_cache: yes
-  state: latest
+    name: npm
+    update_cache: yes
+    state: latest
 
 - name: "update packages."
   become: true
@@ -23,7 +23,7 @@
 - name: "upgrade packages"
   become: true
   apt:
-  upgrade: yes  
+    upgrade: yes  
 
 # - name: "install Node.js LTS"
 #   become: true
