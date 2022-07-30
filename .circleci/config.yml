@@ -86,6 +86,7 @@ jobs:
   #         aws-access-key-id: Access_key_ID
   #         aws-secret-access-key: Secret_access_key
   #         aws-region: AWS_DEFAULT_REGION
+  
   build-frontend:
     docker:
       - image: cimg/node:13.8.0
@@ -399,10 +400,10 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-      - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      # - destroy-environment:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      # - revert-migrations:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
 
 
