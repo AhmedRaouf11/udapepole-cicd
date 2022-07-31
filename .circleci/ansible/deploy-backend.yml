@@ -1,10 +1,9 @@
 ---
-
 - name: Deploy and start udapeople backend server
   hosts: web
   remote_user: ubuntu
-  become: true
-  become_method: sudo
+  # become: true
+  # become_method: sudo
   # become_user: root
   gather_facts: false
   vars:
