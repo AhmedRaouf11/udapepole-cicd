@@ -25,12 +25,12 @@
   apt:
     upgrade: yes  
 
-- name: "install Node.js LTS"
-  become: true
-  apt:
-    name: ["nodejs"]
-    state: latest
-    update_cache: yes
+# - name: "install Node.js LTS"
+#   become: true
+#   apt:
+#     name: ["nodejs"]
+#     state: latest
+#     update_cache: yes
 
 - name: "install PM2 Globally"
   npm:
